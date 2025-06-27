@@ -62,10 +62,13 @@ kotlin {
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.ktor.client.okhttp)
+
+            implementation(libs.koin.android)
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.koin.core)
         }
 
         commonMain.dependencies {
@@ -87,8 +90,11 @@ kotlin {
 
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
+
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
+
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
