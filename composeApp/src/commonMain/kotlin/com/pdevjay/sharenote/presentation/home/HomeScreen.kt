@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
@@ -30,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.LifecycleResumeEffect
@@ -134,10 +138,8 @@ fun HomeScreen(
 fun NoteListScreen(
     notes: List<Note>
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(notes) { note ->
@@ -148,7 +150,7 @@ fun NoteListScreen(
 
 @Composable
 fun NoteItem(content: Note) {
-    OutlinedCard(
+    Column(
     ) {
         Column(
             modifier = Modifier.padding(8.dp)
@@ -159,8 +161,9 @@ fun NoteItem(content: Note) {
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.outline
             )
-            Text("${content.body}")
+            Text("${content.body}", maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
+        HorizontalDivider()
     }
 }
 
@@ -184,7 +187,8 @@ fun AddFolderDialog(
                 TextField(
                     value = folderName,
                     onValueChange = { folderName = it },
-                    placeholder = { Text("Folder Name") }
+                    placeholder = { Text("Folder Name") },
+                    maxLines = 1,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),

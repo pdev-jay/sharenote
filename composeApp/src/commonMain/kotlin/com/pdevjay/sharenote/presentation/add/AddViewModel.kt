@@ -9,7 +9,7 @@ class AddViewModel(
     private val useCases: NoteUseCases
 ): ViewModel() {
     fun addNote(title: String, body: String) {
-        val newNote = Note(title, body, Clock.System.now())
+        val newNote = Note(title = title, body =  body, createdAt =  Clock.System.now())
         useCases.addNote(newNote)
     }
 }

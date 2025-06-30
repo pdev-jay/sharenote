@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinxSerialization)
+    id("app.cash.sqldelight") version "2.1.0"
 }
 
 kotlin {
@@ -29,6 +30,8 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            linkerOpts(listOf("-lsqlite3"))
+//            linkerOpts("-lsqlite3")
         }
     }
     
@@ -64,11 +67,17 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
 
             implementation(libs.koin.android)
+
+            implementation("app.cash.sqldelight:android-driver:2.1.0")
+
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
             implementation(libs.koin.core)
+
+            implementation("app.cash.sqldelight:native-driver:2.1.0")
+
         }
 
         commonMain.dependencies {
@@ -95,6 +104,9 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
 
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
+//            implementation("app.cash.sqldelight:native-driver:2.1.0")
+
+            implementation("app.cash.sqldelight:runtime:2.1.0")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -102,6 +114,8 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+
+            implementation("app.cash.sqldelight:sqlite-driver:2.1.0")
         }
     }
 }
@@ -145,6 +159,14 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.pdevjay.sharenote"
             packageVersion = "1.0.0"
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("com.pdevjay.sharenote")
         }
     }
 }
