@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.pdevjay.sharenote.domain.model.Folder
 import com.pdevjay.sharenote.domain.model.Note
 import com.pdevjay.sharenote.presentation.appbar.BottomBarData
 import com.pdevjay.sharenote.presentation.appbar.LocalBottomBarData
@@ -49,12 +50,13 @@ import kotlin.time.ExperimentalTime
 
 @Composable
 fun HomeScreen(
-    onNavigateToAddNote: () -> Unit = {}
+    onNavigateToAddNote: (Long) -> Unit = {}
 ) {
     val viewModel = koinViewModel<HomeViewModel>()
     println("HomeScreen = ${viewModel}")
     val notes by viewModel.notes.collectAsState()
     val folders by viewModel.folders.collectAsState()
+    val selectedFolder by viewModel.selectedFolder.collectAsState()
 
     var showFolderMenu by remember{mutableStateOf(false)}
     var showAddFolderDialog by remember {  mutableStateOf(false)}
@@ -77,7 +79,7 @@ fun HomeScreen(
                         TextButton(onClick = {
                             showFolderMenu = true
                         }) {
-                            Text("Folder")
+                            Text("${selectedFolder?.name ?: "Default"}")
                         }
 
                         DropdownMenu(
@@ -86,8 +88,9 @@ fun HomeScreen(
                         ) {
                             folders.forEach { folder ->
                                 DropdownMenuItem(
-                                    text = { Text("${folder}") },
+                                    text = { Text("${folder.name}") },
                                     onClick = {
+                                        viewModel.setSelectedFolder(folder)
                                         showFolderMenu = false
                                     }
                                 )
@@ -103,7 +106,7 @@ fun HomeScreen(
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(onClick = {
-                        onNavigateToAddNote()
+                        onNavigateToAddNote(selectedFolder?.id ?: -1L)
                     }) {
                         Text("New Note")
                     }
@@ -114,6 +117,7 @@ fun HomeScreen(
 
     LifecycleResumeEffect(key1 = lifecycleOwner) {
         viewModel.loadNotes()
+        viewModel.loadFolders()
         onPauseOrDispose {
         }
     }
@@ -128,7 +132,8 @@ fun HomeScreen(
         AddFolderDialog(
             onDismissRequest = { showAddFolderDialog = false },
             onConfirmRequest = { folderName ->
-                viewModel.addFolder(folderName)
+                val newFolder = Folder(name = folderName)
+                viewModel.addFolder(newFolder)
             }
         )
     }

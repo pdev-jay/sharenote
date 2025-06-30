@@ -1,15 +1,21 @@
 CREATE TABLE note (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+    folderId INTEGER, -- FK
     title TEXT NOT NULL,
     body TEXT NOT NULL,
-    createdAt INTEGER NOT NULL
+    createdAt INTEGER NOT NULL,
+      FOREIGN KEY(folderId) REFERENCES folder(id) ON DELETE CASCADE
+
 );
 
 selectAll:
 SELECT * FROM note;
 
+selectNotesByFolderId:
+SELECT * FROM note WHERE folderId = ?;
+
 insertNote:
-INSERT INTO note(title, body, createdAt) VALUES (?, ?, ?);
+INSERT INTO note(folderId, title, body, createdAt) VALUES (?, ?, ?, ?);
 
 deleteNoteById:
 DELETE FROM note WHERE id = ?;

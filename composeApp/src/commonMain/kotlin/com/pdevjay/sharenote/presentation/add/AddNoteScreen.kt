@@ -29,6 +29,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AddNoteScreen(
+    folderId: Long,
     onPopBackStack: () -> Unit = {}
 ) {
     val noteViewModel = koinViewModel<AddViewModel>()
@@ -59,7 +60,7 @@ fun AddNoteScreen(
                 actions = {
                     TextButton(
                         onClick = {
-                        noteViewModel.addNote(title = title, body = content)
+                        noteViewModel.addNote(folderId = folderId, title = title, body = content)
                         onPopBackStack()
                     },
                         enabled = title.isNotBlank() && content.isNotBlank()

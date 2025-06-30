@@ -5,6 +5,7 @@ import kotlinx.datetime.Instant
 
 data class Note constructor(
     val id: Long? = null,
+    val folderId: Long? = null, // 추가
     val title: String = "",
     val body: String = "",
     val createdAt: Instant = Clock.System.now()

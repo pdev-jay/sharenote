@@ -8,8 +8,8 @@ import kotlinx.datetime.Clock
 class AddViewModel(
     private val useCases: NoteUseCases
 ): ViewModel() {
-    fun addNote(title: String, body: String) {
-        val newNote = Note(title = title, body =  body, createdAt =  Clock.System.now())
+    fun addNote(folderId: Long, title: String, body: String) {
+        val newNote = Note(folderId = folderId, title = title, body =  body, createdAt =  Clock.System.now())
         useCases.addNote(newNote)
     }
 }
