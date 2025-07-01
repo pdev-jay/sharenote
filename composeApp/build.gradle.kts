@@ -107,6 +107,8 @@ kotlin {
 //            implementation("app.cash.sqldelight:native-driver:2.1.0")
 
             implementation("app.cash.sqldelight:runtime:2.1.0")
+            implementation("app.cash.sqldelight:coroutines-extensions:2.1.0")
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

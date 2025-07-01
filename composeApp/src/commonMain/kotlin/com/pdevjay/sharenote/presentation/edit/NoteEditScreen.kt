@@ -27,7 +27,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import com.pdevjay.sharenote.domain.model.Note
 import com.pdevjay.sharenote.presentation.appbar.BottomBarData
 import com.pdevjay.sharenote.presentation.appbar.LocalBottomBarData
 import com.pdevjay.sharenote.presentation.appbar.LocalTopBarData
@@ -43,14 +42,20 @@ fun NoteEditScreen(
 ) {
     val noteEditViewModel = koinViewModel<NoteEditViewModel>(){parametersOf(noteId)}
 
-    val note by noteEditViewModel.selectedNote.collectAsState()
+    val note by noteEditViewModel.selectedNote.collectAsState(initial = null)
 
     val titleFocusRequester = remember { FocusRequester() }
     val contentFocusRequester = remember { FocusRequester() }
 
-    var title by remember { mutableStateOf(note?.title ?: "") }
-    var body by remember { mutableStateOf(note?.body ?: "") }
+    var title by remember { mutableStateOf("") }
+    var body by remember { mutableStateOf("") }
 
+    LaunchedEffect(note) {
+        if (note != null) {
+            title = note!!.title
+            body = note!!.body
+        }
+    }
     val setTopBar = LocalTopBarData.current
     val setBottomBar = LocalBottomBarData.current
 

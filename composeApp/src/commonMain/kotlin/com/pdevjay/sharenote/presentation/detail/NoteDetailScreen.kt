@@ -33,7 +33,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun NoteDetailScreen(noteId: Long, onPopBackStack: () -> Unit = {}, onClickEditButton: (Long) -> Unit = {})  {
     val noteDetailViewModel = koinViewModel<NoteDetailViewModel>(){ parametersOf(noteId)}
-    val note by noteDetailViewModel.selectedNote.collectAsState()
+    val note by noteDetailViewModel.selectedNote.collectAsState(initial = null)
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -73,7 +73,7 @@ fun NoteDetailScreen(noteId: Long, onPopBackStack: () -> Unit = {}, onClickEditB
     }
 
     LifecycleResumeEffect(key1 = lifecycleOwner) {
-        noteDetailViewModel.loadNote()
+//        noteDetailViewModel.loadNote()
         onPauseOrDispose {
         }
     }

@@ -1,17 +1,18 @@
 package com.pdevjay.sharenote.domain.repository
 
 import com.pdevjay.sharenote.domain.model.Folder
+import kotlinx.coroutines.flow.Flow
 
 
 interface FolderRepository {
-    fun getAllFolders(): List<Folder>
+    fun getAllFolders(): Flow<List<Folder>>
 
-    fun getDefaultFolder(): Folder?
+    suspend fun getDefaultFolder(): Folder?
 
-    fun getLastInsertRowId(): Long
-    fun addFolder(folder: Folder)
+    suspend fun getLastInsertRowId(): Long
+    suspend fun addFolder(folder: Folder)
 
-    fun getFolderByName(name: String): Folder?
+    suspend fun getFolderByName(name: String): Folder?
 
-    fun getFolderById(id: Long): Folder?
+    suspend fun getFolderById(id: Long): Folder?
 }

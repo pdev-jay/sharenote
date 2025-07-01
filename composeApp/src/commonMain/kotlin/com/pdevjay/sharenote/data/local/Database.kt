@@ -1,28 +1,36 @@
 package com.pdevjay.sharenote.data.local
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.coroutines.mapToOne
 import com.pdevjay.sharenote.domain.model.Note
 import com.pdevjay.sharenote.Database
 import com.pdevjay.sharenote.domain.model.Folder
+import com.pdevjay.sharenote.util.IODispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
 class DatabaseHelper(database: Database) {
     private val noteQueries = database.noteQueries
     private val folderQueries = database.folderQueries
 
-    fun selectAllNotes(): List<Note> = noteQueries.selectAll().executeAsList().map{ it.toDomain()}
-    fun selectNoteById(id: Long): Note? = noteQueries.selectNoteById(id).executeAsOneOrNull()?.toDomain()
-    fun selectNotesByFolderId(folderId: Long): List<Note> = noteQueries.selectNotesByFolderId(folderId).executeAsList().map{ it.toDomain()}
-    fun insertNote(note: Note) = noteQueries.insertNote(folderId = note.folderId, title = note.title, body = note.body, createdAt = note.createdAt.toEpochMilliseconds())
-    fun updateNote(note: Note) = noteQueries.updateNoteById(title = note.title, body = note.body, id = note.id ?: 0)
+    fun selectAllNotes(): Flow<List<Note>> = noteQueries.selectAll().asFlow().mapToList(IODispatcher).map { notes -> notes.map { it.toDomain()} }
+    fun selectNoteById(id: Long): Flow<Note?> = noteQueries.selectNoteById(id).asFlow().mapToOne(IODispatcher).map{it.toDomain()}
+    fun selectNotesByFolderId(folderId: Long): Flow<List<Note>> = noteQueries.selectNotesByFolderId(folderId).asFlow().mapToList(IODispatcher).map { notes -> notes.map { it.toDomain()} }
+    suspend fun insertNote(note: Note) = withContext(IODispatcher){noteQueries.insertNote(folderId = note.folderId, title = note.title, body = note.body, createdAt = note.createdAt.toEpochMilliseconds())}
+    suspend fun updateNote(note: Note) = withContext(IODispatcher){noteQueries.updateNoteById(title = note.title, body = note.body, id = note.id ?: 0)}
 
-    fun deleteNote(note: Note) = noteQueries.deleteNoteById(note.id ?: 0)
+    suspend fun deleteNote(note: Note) = withContext(IODispatcher){noteQueries.deleteNoteById(note.id ?: 0)}
 
-    fun selectAllFolders(): List<Folder> = folderQueries.selectAll().executeAsList().map{ it.toDomain()}
-    fun selectDefaultFolder(): Folder? = folderQueries.selectDefaultFolder().executeAsOneOrNull()?.toDomain()
-    fun selectLastInsertRowId(): Long = folderQueries.lastInsertRowId().executeAsOne()
-    fun selectFolderByName(name: String): Folder? = folderQueries.selectFolderByName(name).executeAsOneOrNull()?.toDomain()
-    fun selectFolderById(id: Long): Folder? = folderQueries.selectFolderById(id).executeAsOneOrNull()?.toDomain()
-    fun insertFolder(folder: Folder) = folderQueries.insertFolder(name = folder.name)
+    fun selectAllFolders(): Flow<List<Folder>> = folderQueries.selectAll().asFlow().mapToList(IODispatcher).map{ folders -> folders.map{ it.toDomain()}}
+    suspend fun selectDefaultFolder(): Folder? = withContext(IODispatcher){folderQueries.selectDefaultFolder().executeAsOneOrNull()?.toDomain()}
+    suspend fun selectLastInsertRowId(): Long = withContext(IODispatcher){folderQueries.lastInsertRowId().executeAsOne()}
+    suspend fun selectFolderByName(name: String): Folder? = withContext(IODispatcher){folderQueries.selectFolderByName(name).executeAsOneOrNull()?.toDomain()}
+    suspend fun selectFolderById(id: Long): Folder? = withContext(IODispatcher){folderQueries.selectFolderById(id).executeAsOneOrNull()?.toDomain()}
+    suspend fun insertFolder(folder: Folder) = withContext(IODispatcher){folderQueries.insertFolder(name = folder.name)}
 }
 
 // SQLDelight Note -> 내 도메인 Note 로 매핑

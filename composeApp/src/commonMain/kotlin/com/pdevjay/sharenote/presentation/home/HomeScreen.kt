@@ -10,15 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,7 +42,6 @@ import com.pdevjay.sharenote.presentation.appbar.LocalTopBarData
 import com.pdevjay.sharenote.presentation.appbar.TopBarData
 import com.pdevjay.sharenote.presentation.util.toYyyyMmDd
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.ExperimentalTime
 
 @Composable
 fun HomeScreen(
@@ -55,8 +50,8 @@ fun HomeScreen(
 ) {
     val viewModel = koinViewModel<HomeViewModel>()
     println("HomeScreen = ${viewModel}")
-    val notes by viewModel.notes.collectAsState()
-    val folders by viewModel.folders.collectAsState()
+    val notes by viewModel.notes.collectAsState(initial = emptyList())
+    val folders by viewModel.folders.collectAsState(initial = emptyList())
     val selectedFolder by viewModel.selectedFolder.collectAsState()
 
     var showFolderMenu by remember{mutableStateOf(false)}
@@ -117,8 +112,6 @@ fun HomeScreen(
     }
 
     LifecycleResumeEffect(key1 = lifecycleOwner) {
-        viewModel.loadNotes()
-        viewModel.loadFolders()
         onPauseOrDispose {
         }
     }
