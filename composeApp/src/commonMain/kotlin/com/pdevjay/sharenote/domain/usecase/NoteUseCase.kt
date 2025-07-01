@@ -9,6 +9,7 @@ data class NoteUseCases(
     val addNote: AddNote,
     val getNotesInFolder: GetNotesInFolder,
     val getNoteById: GetNoteById,
+    val updateNote: UpdateNote,
 //    val deleteNote: DeleteNote,
 //    val clearNotes: ClearNotes
 )
@@ -30,6 +31,10 @@ class AddNote(private val repository: NoteRepository) {
 
 class DeleteNote(private val repository: NoteRepository) {
     operator fun invoke(note: Note) = repository.deleteNote(note)
+}
+
+class UpdateNote(private val repository: NoteRepository) {
+    operator fun invoke(note: Note) = repository.updateNote(note)
 }
 //
 //class ClearNotes(private val repository: NoteRepository) {

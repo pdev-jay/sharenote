@@ -13,6 +13,7 @@ class DatabaseHelper(database: Database) {
     fun selectNoteById(id: Long): Note? = noteQueries.selectNoteById(id).executeAsOneOrNull()?.toDomain()
     fun selectNotesByFolderId(folderId: Long): List<Note> = noteQueries.selectNotesByFolderId(folderId).executeAsList().map{ it.toDomain()}
     fun insertNote(note: Note) = noteQueries.insertNote(folderId = note.folderId, title = note.title, body = note.body, createdAt = note.createdAt.toEpochMilliseconds())
+    fun updateNote(note: Note) = noteQueries.updateNoteById(title = note.title, body = note.body, id = note.id ?: 0)
 
     fun deleteNote(note: Note) = noteQueries.deleteNoteById(note.id ?: 0)
 

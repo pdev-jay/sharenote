@@ -11,3 +11,5 @@ data class AddNote(val folderId: Long? = null)
 
 @Serializable
 data class NoteDetail(val noteId: Long)
+@Serializable
+data class NoteEdit(val noteId: Long)

@@ -13,16 +13,22 @@ import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import com.pdevjay.sharenote.presentation.add.AddNoteScreen
 import com.pdevjay.sharenote.presentation.detail.NoteDetailScreen
+import com.pdevjay.sharenote.presentation.edit.NoteEditScreen
 import com.pdevjay.sharenote.presentation.home.HomeScreen
 
 @Composable
-fun NavGraph(navController: NavHostController, paddingValues: PaddingValues,
+fun NavGraph(
+    navController: NavHostController, paddingValues: PaddingValues,
 ) {
 
-    NavHost(navController = navController, modifier = Modifier.padding(paddingValues).padding(8.dp), startDestination = Home) {
+    NavHost(
+        navController = navController,
+        modifier = Modifier.padding(paddingValues).padding(8.dp),
+        startDestination = Home
+    ) {
         composable<Home> {
             HomeScreen(
-                onClickNoteItem = { note -> navController.navigate(NoteDetail(note.id ?: -1))},
+                onClickNoteItem = { note -> navController.navigate(NoteDetail(note.id ?: -1)) },
                 onNavigateToAddNote = { folderId: Long ->
                     navController.navigate(AddNote(folderId)) // 여기에 folderId 값 삽입
                 }
@@ -30,7 +36,7 @@ fun NavGraph(navController: NavHostController, paddingValues: PaddingValues,
         }
 
         composable<AddNote>(
-        ) {backStackEntry->
+        ) { backStackEntry ->
             val addNode = backStackEntry.toRoute<AddNote>()
             AddNoteScreen(
                 folderId = addNode.folderId ?: -1L,
@@ -40,7 +46,15 @@ fun NavGraph(navController: NavHostController, paddingValues: PaddingValues,
 
         composable<NoteDetail> {
             val noteDetail = it.toRoute<NoteDetail>()
-            NoteDetailScreen(noteId = noteDetail.noteId, onPopBackStack = { navController.popBackStack() })
+            NoteDetailScreen(
+                noteId = noteDetail.noteId,
+                onPopBackStack = { navController.popBackStack() },
+                onClickEditButton = { noteId -> navController.navigate(NoteEdit(noteId)) })
+        }
+
+        composable<NoteEdit> {
+            val noteEdit = it.toRoute<NoteEdit>()
+            NoteEditScreen(noteId = noteEdit.noteId, onPopBackStack = { navController.popBackStack() })
         }
     }
 }

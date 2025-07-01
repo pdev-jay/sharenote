@@ -23,5 +23,8 @@ INSERT INTO note(folderId, title, body, createdAt) VALUES (?, ?, ?, ?);
 deleteNoteById:
 DELETE FROM note WHERE id = ?;
 
+updateNoteById:
+UPDATE note SET title = ?, body = ? WHERE id = ?;
+
 deleteAll:
 DELETE FROM note;

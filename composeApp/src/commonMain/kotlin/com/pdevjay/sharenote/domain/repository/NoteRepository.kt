@@ -9,5 +9,6 @@ interface NoteRepository {
     fun getAllNotesInFolder(folderId: Long): List<Note>
     fun addNote(note: Note)
     fun deleteNote(note: Note)
+    fun updateNote(note: Note)
 //    fun clear()
 }

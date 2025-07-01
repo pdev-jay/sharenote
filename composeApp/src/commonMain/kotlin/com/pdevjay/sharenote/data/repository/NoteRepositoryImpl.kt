@@ -23,4 +23,8 @@ class NoteRepositoryImpl(
         db.deleteNote(note)
     }
 
+    override fun updateNote(note: Note) {
+        db.updateNote(note)
+    }
+
 }
