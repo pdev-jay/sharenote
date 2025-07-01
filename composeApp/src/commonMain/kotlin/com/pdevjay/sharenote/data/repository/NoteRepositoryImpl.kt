@@ -10,6 +10,7 @@ class NoteRepositoryImpl(
 ) : NoteRepository {
 
     override fun getAllNotes(): List<Note> = db.selectAllNotes()
+    override fun getNoteById(id: Long): Note? = db.selectNoteById(id)
 
     override fun getAllNotesInFolder(folderId: Long): List<Note> {
         return db.selectNotesByFolderId(folderId)

@@ -14,6 +14,9 @@ SELECT * FROM note;
 selectNotesByFolderId:
 SELECT * FROM note WHERE folderId = ?;
 
+selectNoteById:
+SELECT * FROM note WHERE id = ?;
+
 insertNote:
 INSERT INTO note(folderId, title, body, createdAt) VALUES (?, ?, ?, ?);
 

@@ -10,6 +10,7 @@ class DatabaseHelper(database: Database) {
     private val folderQueries = database.folderQueries
 
     fun selectAllNotes(): List<Note> = noteQueries.selectAll().executeAsList().map{ it.toDomain()}
+    fun selectNoteById(id: Long): Note? = noteQueries.selectNoteById(id).executeAsOneOrNull()?.toDomain()
     fun selectNotesByFolderId(folderId: Long): List<Note> = noteQueries.selectNotesByFolderId(folderId).executeAsList().map{ it.toDomain()}
     fun insertNote(note: Note) = noteQueries.insertNote(folderId = note.folderId, title = note.title, body = note.body, createdAt = note.createdAt.toEpochMilliseconds())
 

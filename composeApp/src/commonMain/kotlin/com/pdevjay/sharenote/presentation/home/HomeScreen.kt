@@ -50,6 +50,7 @@ import kotlin.time.ExperimentalTime
 
 @Composable
 fun HomeScreen(
+    onClickNoteItem: (Note) -> Unit = {},
     onNavigateToAddNote: (Long) -> Unit = {}
 ) {
     val viewModel = koinViewModel<HomeViewModel>()
@@ -126,7 +127,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        NoteListScreen(notes = notes)
+        NoteListScreen(notes = notes, onClickNoteItem = onClickNoteItem)
     }
     if (showAddFolderDialog) {
         AddFolderDialog(
@@ -141,24 +142,28 @@ fun HomeScreen(
 
 @Composable
 fun NoteListScreen(
-    notes: List<Note>
+    notes: List<Note>,
+    onClickNoteItem: (Note) -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(notes) { note ->
-            NoteItem(content = note)
+            NoteItem(content = note, onClickNoteItem = onClickNoteItem)
         }
     }
 }
 
 @Composable
-fun NoteItem(content: Note) {
+fun NoteItem(content: Note, onClickNoteItem: (Note) -> Unit = {}) {
     Column(
     ) {
         Column(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clickable(onClick = { onClickNoteItem(content) })
         ) {
             Text("${content.title}", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold))
             Text(

@@ -19,7 +19,9 @@ import com.pdevjay.sharenote.domain.usecase.GetFolderById
 import com.pdevjay.sharenote.domain.usecase.GetFolderByName
 import com.pdevjay.sharenote.domain.usecase.GetFolders
 import com.pdevjay.sharenote.domain.usecase.GetLastInsertRowId
+import com.pdevjay.sharenote.domain.usecase.GetNoteById
 import com.pdevjay.sharenote.domain.usecase.GetNotesInFolder
+import com.pdevjay.sharenote.presentation.detail.NoteDetailViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -38,6 +40,7 @@ val koinModule = module {
     factory { GetNotes(get()) }
     factory { AddNote(get()) }
     factory { GetNotesInFolder(get()) }
+    factory { GetNoteById(get()) }
 //    factory { DeleteNote(get()) }
 //    factory { ClearNotes(get()) }
 
@@ -53,6 +56,7 @@ val koinModule = module {
             getNotes = get(),
             addNote = get(),
             getNotesInFolder = get(),
+            getNoteById = get()
 //            deleteNote = get(),
 //            clearNotes = get()
         )
@@ -71,7 +75,10 @@ val koinModule = module {
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::AddViewModel)
-
+    viewModelOf(::NoteDetailViewModel)
+//    viewModelOf {noteId: Long ->
+//        NoteDetailViewModel(noteId, get())
+//    }
 }
 
 fun initKoin() {
